@@ -21,8 +21,28 @@ var (
 	silent    bool
 )
 
-type Scenario struct {
+type scenario struct {
 	conn *ConnStub
+}
+
+func (s *scenario) ResourceCreated() {
+	s.conn.buildReply(nil, map[string]string{"ret": "*1"})
+}
+
+func (s *scenario) ResourceExists() {
+	s.conn.buildReply([]map[string]string{{".id": "*1"}}, nil)
+}
+
+func (s *scenario) ResourceDeleted() {
+	s.conn.buildReply(nil, nil)
+}
+
+func (s *scenario) ResourceDoesNotExist() {
+	s.conn.buildReply(nil, nil)
+}
+
+func (s *scenario) ResourceUpdated() {
+	s.conn.buildReply(nil, nil)
 }
 
 func init() {
@@ -37,7 +57,7 @@ func init() {
 
 	flag.Parse()
 
-	conntypes := map[string]bool{"stub": true, "routeros": true}
+	conntypes := map[string]bool{"stub": true, "ros": true}
 
 	if _, ok := conntypes[connType]; !ok {
 		fmt.Printf("unknown connection type: %v\n", connType)
@@ -50,11 +70,12 @@ func init() {
 	}
 }
 
-func getTestClient() (*Client, error) {
+func getTestTimeClient() (*Client, error) {
 	var c *Client
 	var err error
 
-	if connType == "routeros" {
+	switch connType {
+	case "ros":
 		c, err = NewClient(&Config{
 			Address:  fmt.Sprintf("%v:%v", connAddr, connPort),
 			Username: connUser,
@@ -65,10 +86,10 @@ func getTestClient() (*Client, error) {
 		if err != nil {
 			return nil, err
 		}
-	} else {
+	case "stub":
 		c = &Client{
 			conn: &ConnStub{
-				repliesQueue: make(chan *routeros.Reply, 1),
+				q: make(chan *routeros.Reply, 2),
 			},
 		}
 	}

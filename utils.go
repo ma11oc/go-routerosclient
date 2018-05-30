@@ -6,8 +6,6 @@ import (
 	"reflect"
 	"strconv"
 	"strings"
-
-	"github.com/go-routeros/routeros/proto"
 )
 
 func buildCommand(command string, proplist *[]string, attrs *map[string]string, isQuery bool) (string, error) {
@@ -49,33 +47,34 @@ func buildAttrsFromResource(i interface{}) (map[string]string, error) {
 	return attrs, nil
 }
 
-func setFieldsFromReply(i interface{}, s *proto.Sentence) (interface{}, error) {
-	v := reflect.ValueOf(i).Elem()
+func setFieldsFromMap(r Resource, m map[string]string) (Resource, error) {
+
+	v := reflect.ValueOf(r).Elem()
 
 	if v.Kind() == reflect.Struct {
-		for j := 0; j < v.NumField(); j++ {
-			ftag := v.Type().Field(j).Tag.Get("ros")
-			fname := v.Type().Field(j).Name
-			fval := v.Field(j)
+		for i := 0; i < v.NumField(); i++ {
+			ftag := v.Type().Field(i).Tag.Get("ros")
+			fname := v.Type().Field(i).Name
+			fval := v.Field(i)
 
-			if s.Map[ftag] != "" {
+			if m[ftag] != "" {
 				if fval.CanSet() && fval.IsValid() {
 					switch fval.Kind() {
 					case reflect.Bool:
-						newVal, err := strconv.ParseBool(s.Map[ftag])
+						newVal, err := strconv.ParseBool(m[ftag])
 						if err != nil {
 							return nil, err
 						}
 						fval.SetBool(newVal)
 					case reflect.Int:
-						newVal, err := strconv.ParseInt(s.Map[ftag], 0, 0)
+						newVal, err := strconv.ParseInt(m[ftag], 0, 0)
 						if !fval.OverflowInt(newVal) {
 							fval.SetInt(newVal)
 						} else {
 							return nil, err
 						}
 					default:
-						fval.SetString(s.Map[ftag])
+						fval.SetString(m[ftag])
 					}
 				} else {
 					log.Printf("[W] field `%v` is not settable (ignoring)", fname)
@@ -86,5 +85,5 @@ func setFieldsFromReply(i interface{}, s *proto.Sentence) (interface{}, error) {
 		}
 	}
 
-	return i, nil
+	return r, nil
 }

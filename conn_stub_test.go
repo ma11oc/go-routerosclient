@@ -9,14 +9,14 @@ import (
 )
 
 type ConnStub struct {
-	repliesQueue chan *routeros.Reply
+	q chan *routeros.Reply
 }
 
 func (c *ConnStub) RunArgs(s []string) (*routeros.Reply, error) {
 	select {
-	case reply := <-c.repliesQueue:
-		return reply, nil
-	case <-time.After(3 * time.Second):
+	case r := <-c.q:
+		return r, nil
+	case <-time.After(time.Second):
 		return nil, fmt.Errorf("timeout exceeded getting reply from queue")
 	}
 }
@@ -33,10 +33,10 @@ func (c *ConnStub) buildReply(reply []map[string]string, done map[string]string)
 	}
 
 	if len(reply) > 0 {
-		for i := 0; i < len(reply); i++ {
+		for _, v := range reply {
 			r.Re = append(r.Re, &proto.Sentence{
 				Word: "!re",
-				Map:  reply[i],
+				Map:  v,
 			})
 		}
 	}
@@ -45,9 +45,10 @@ func (c *ConnStub) buildReply(reply []map[string]string, done map[string]string)
 		r.Done.Map = done
 	}
 
-	go func() {
-		c.repliesQueue <- r
-	}()
+	select {
+	case c.q <- r:
+	case <-time.After(time.Millisecond):
+	}
 
 	return nil, true
 }

@@ -24,28 +24,6 @@ func (d *ResourceDHCPServer) validate() error {
 	return nil
 }
 
-/* FIXME
- * func NewDHCPServer(attrs map[string]string) (*ResourceDHCPServer, error) {
- *     var d *ResourceDHCPServer
- *     var ok bool
- *
- *     i, err := setFieldsFromMap(&resourceDHCPServer{}, attrs)
- *     if err != nil {
- *         return nil, err
- *     }
- *
- *     if d, ok = i.(*ResourceDHCPServer); !ok {
- *         return nil, fmt.Errorf("unable to cast interface to *ResourceDHCPServer")
- *     }
- *
- *     if err := d.validate(); err != nil {
- *         return nil, err
- *     }
- *
- *     return d, nil
- * }
- */
-
 func (d *ResourceDHCPServer) getID() string {
 	return d.ID
 }

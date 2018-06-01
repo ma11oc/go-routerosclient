@@ -11,13 +11,7 @@ import (
  * arp -- Address Resolution Protocol
  * arp-timeout --
  * auto-mac --
- * comment -- Short description of the item
- * disabled -- Defines whether item is ignored or used
- * fast-forward --
- * forward-delay -- Time which is spent in listening/learning state
  * max-message-age -- Time to remember Hello messages received from other bridges
- * mtu -- Maximum Transmit Unit
- * name -- Bridge name
  * priority -- Bridge interface priority
  * protocol-mode --
  * transmit-hold-count --
@@ -45,28 +39,6 @@ func (d *ResourceInterfaceBridge) validate() error {
 
 	return nil
 }
-
-/* FIXME
- * func NewInterfaceBridge(attrs map[string]string) (*resourceInterfaceBridge, error) {
- *     var d *resourceInterfaceBridge
- *     var ok bool
- *
- *     i, err := setFieldsFromMap(&resourceInterfaceBridge{}, attrs)
- *     if err != nil {
- *         return nil, err
- *     }
- *
- *     if d, ok = i.(*resourceInterfaceBridge); !ok {
- *         return nil, fmt.Errorf("unable to cast interface to *resourceInterfaceBridge")
- *     }
- *
- *     if err := d.validate(); err != nil {
- *         return nil, err
- *     }
- *
- *     return d, nil
- * }
- */
 
 func (d *ResourceInterfaceBridge) getID() string {
 	return d.ID

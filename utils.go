@@ -87,23 +87,3 @@ func setFieldsFromMap(r Resource, m map[string]string) (Resource, error) {
 
 	return r, nil
 }
-
-/* FIXME
- * func getFieldValue(r Resource, name string) (string, error) {
- *     v := reflect.ValueOf(r).Elem()
- *
- *     if v.Kind() == reflect.Struct {
- *         for i := 0; i < v.NumField(); i++ {
- *             ftag := v.Type().Field(i).Tag.Get("ros")
- *             fval := v.Field(i)
- *
- *             if ftag == name {
- *                 return fmt.Sprintf("%v", fval), nil
- *             }
- *
- *         }
- *     }
- *
- *     return "", fmt.Errorf("no such field with tag `%v`", name)
- * }
- */

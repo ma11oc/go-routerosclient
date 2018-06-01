@@ -39,28 +39,6 @@ func (d *ResourceDHCPServerLease) validate() error {
 	return nil
 }
 
-/* FIXME
- * func NewDHCPServerLease(attrs map[string]string) (*ResourceDHCPServerLease, error) {
- *     var d *ResourceDHCPServerLease
- *     var ok bool
- *
- *     i, err := setFieldsFromMap(&resourceDHCPServerLease{}, attrs)
- *     if err != nil {
- *         return nil, err
- *     }
- *
- *     if d, ok = i.(*ResourceDHCPServerLease); !ok {
- *         return nil, fmt.Errorf("unable to cast interface to *ResourceDHCPServerLease")
- *     }
- *
- *     if err := d.validate(); err != nil {
- *         return nil, err
- *     }
- *
- *     return d, nil
- * }
- */
-
 func (d *ResourceDHCPServerLease) getID() string {
 	return d.ID
 }

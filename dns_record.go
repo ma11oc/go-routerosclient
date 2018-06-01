@@ -26,28 +26,6 @@ func (d *ResourceDNSStaticRecord) validate() error {
 	return nil
 }
 
-/* FIXME
- * func NewDNSStaticRecord(attrs map[string]string) (*ResourceDNSStaticRecord, error) {
- *     var d *ResourceDNSStaticRecord
- *     var ok bool
- *
- *     i, err := setFieldsFromMap(&resourceDNSStaticRecord{}, attrs)
- *     if err != nil {
- *         return nil, err
- *     }
- *
- *     if d, ok = i.(*resourceDNSStaticRecord); !ok {
- *         return nil, fmt.Errorf("unable to cast interface to *resourceDNSStaticRecord")
- *     }
- *
- *     if err := d.validate(); err != nil {
- *         return nil, err
- *     }
- *
- *     return d, nil
- * }
- */
-
 func (d *ResourceDNSStaticRecord) getID() string {
 	return d.ID
 }

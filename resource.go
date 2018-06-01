@@ -230,17 +230,3 @@ func (c *Client) CheckResourceExists(res Resource) (error, bool) {
 		return fmt.Errorf("ambiguous reply: %v", r), false
 	}
 }
-
-/* FIXME
- * func (c *Client) SetResourceAttr(res Resource, name string, val string) (error, bool) {
- *     if _, err := setFieldsFromMap(res, map[string]string{name: val}); err != nil {
- *         return fmt.Errorf("unable to set value `%v` for field `%v`", name, val), false
- *     }
- *
- *     return nil, true
- * }
- *
- * func (c *Client) GetResourceAttrByTag(res Resource, tag string) (string, error) {
- *     return getFieldValue(res, tag)
- * }
- */

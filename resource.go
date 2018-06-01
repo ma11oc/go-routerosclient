@@ -19,6 +19,10 @@ type Resource interface {
 func (c *Client) CreateResource(res Resource) (string, error) {
 	log.Printf("[D][C] CreateResource(%v)", res)
 
+	if err := res.validate(); err != nil {
+		return "", err
+	}
+
 	if err, ok := c.CheckResourceExists(res); ok {
 		return "", fmt.Errorf("resource exists: %v", res)
 	} else if err != nil {
@@ -56,6 +60,14 @@ func (c *Client) UpdateResource(o Resource, n Resource) (error, bool) {
 	log.Printf("[D][U] UpdateResource")
 	log.Printf("[D][U] o(%v) -> n(%v)", o, n)
 
+	if err := o.validate(); err != nil {
+		return err, false
+	}
+
+	if err := n.validate(); err != nil {
+		return err, false
+	}
+
 	cur, err := c.ReadResource(o)
 	if err != nil {
 		return err, false
@@ -86,6 +98,10 @@ func (c *Client) UpdateResource(o Resource, n Resource) (error, bool) {
 func (c *Client) ReadResource(res Resource) (Resource, error) {
 	log.Printf("[D][R] ReadResource(%v)", res)
 
+	if err := res.validate(); err != nil {
+		return nil, err
+	}
+
 	command := res.getReadCommand()
 	attrs, err := buildAttrsFromResource(res)
 	if err != nil {
@@ -112,14 +128,14 @@ func (c *Client) ReadResource(res Resource) (Resource, error) {
 		var nr Resource
 
 		switch res.(type) {
-		case *resourceInterfaceBridge:
-			nr = &resourceInterfaceBridge{}
-		case *resourceDHCPServerLease:
-			nr = &resourceDHCPServerLease{}
-		case *resourceDHCPServer:
-			nr = &resourceDHCPServer{}
-		case *resourceDNSStaticRecord:
-			nr = &resourceDNSStaticRecord{}
+		case *ResourceInterfaceBridge:
+			nr = &ResourceInterfaceBridge{}
+		case *ResourceDHCPServerLease:
+			nr = &ResourceDHCPServerLease{}
+		case *ResourceDHCPServer:
+			nr = &ResourceDHCPServer{}
+		case *ResourceDNSStaticRecord:
+			nr = &ResourceDNSStaticRecord{}
 		default:
 			return nil, fmt.Errorf("unable to determine resource type")
 		}
@@ -136,9 +152,13 @@ func (c *Client) ReadResource(res Resource) (Resource, error) {
 	}
 }
 
-// DeleteResource deletes existing lease from RouterOS. Is lease doesn't exist, returns error.
+// DeleteResource deletes existing lease from RouterOS. If lease doesn't exist, returns error.
 func (c *Client) DeleteResource(res Resource) (error, bool) {
 	log.Printf("[D][D] DeleteResource(%v)", res)
+
+	if err := res.validate(); err != nil {
+		return err, false
+	}
 
 	resource, err := c.ReadResource(res)
 	if err != nil {
@@ -166,6 +186,10 @@ func (c *Client) DeleteResource(res Resource) (error, bool) {
 
 func (c *Client) CheckResourceExists(res Resource) (error, bool) {
 	log.Printf("[D][?] CheckResourceExists(%v)", res)
+
+	if err := res.validate(); err != nil {
+		return err, false
+	}
 
 	command := res.getReadCommand()
 	proplist := []string{".id"}
@@ -197,3 +221,17 @@ func (c *Client) CheckResourceExists(res Resource) (error, bool) {
 		return fmt.Errorf("ambiguous reply: %v", r), false
 	}
 }
+
+/* FIXME
+ * func (c *Client) SetResourceAttr(res Resource, name string, val string) (error, bool) {
+ *     if _, err := setFieldsFromMap(res, map[string]string{name: val}); err != nil {
+ *         return fmt.Errorf("unable to set value `%v` for field `%v`", name, val), false
+ *     }
+ *
+ *     return nil, true
+ * }
+ *
+ * func (c *Client) GetResourceAttrByTag(res Resource, tag string) (string, error) {
+ *     return getFieldValue(res, tag)
+ * }
+ */

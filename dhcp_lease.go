@@ -1,8 +1,6 @@
 package routerosclient
 
 import (
-	"fmt"
-
 	"github.com/asaskevich/govalidator"
 )
 
@@ -17,7 +15,7 @@ import (
 // BUG: RouterOS does not recognize space separated value of `comment` attribute.
 // BUG: AlwaysBroadcast doesn't use for read query.
 // BUG: UseSrcMac doesn't use for read query.
-type resourceDHCPServerLease struct {
+type ResourceDHCPServerLease struct {
 	ID           string `ros:".id"`
 	Address      string `ros:"address"           valid:"ipv4,required"`
 	AddressLists string `ros:"address-lists"     valid:"optional"`
@@ -28,7 +26,7 @@ type resourceDHCPServerLease struct {
 	Server       string `ros:"server"            valid:"required"`
 }
 
-func (d *resourceDHCPServerLease) validate() error {
+func (d *ResourceDHCPServerLease) validate() error {
 	if d.ID == "" {
 		_, err := govalidator.ValidateStruct(d)
 
@@ -41,47 +39,48 @@ func (d *resourceDHCPServerLease) validate() error {
 	return nil
 }
 
-func NewDHCPServerLease(attrs map[string]string) (*resourceDHCPServerLease, error) {
-	// FIXME
-	var d *resourceDHCPServerLease
-	var ok bool
+/* FIXME
+ * func NewDHCPServerLease(attrs map[string]string) (*ResourceDHCPServerLease, error) {
+ *     var d *ResourceDHCPServerLease
+ *     var ok bool
+ *
+ *     i, err := setFieldsFromMap(&resourceDHCPServerLease{}, attrs)
+ *     if err != nil {
+ *         return nil, err
+ *     }
+ *
+ *     if d, ok = i.(*ResourceDHCPServerLease); !ok {
+ *         return nil, fmt.Errorf("unable to cast interface to *ResourceDHCPServerLease")
+ *     }
+ *
+ *     if err := d.validate(); err != nil {
+ *         return nil, err
+ *     }
+ *
+ *     return d, nil
+ * }
+ */
 
-	i, err := setFieldsFromMap(&resourceDHCPServerLease{}, attrs)
-	if err != nil {
-		return nil, err
-	}
-
-	if d, ok = i.(*resourceDHCPServerLease); !ok {
-		return nil, fmt.Errorf("unable to cast interface to *resourceDHCPServerLease")
-	}
-
-	if err := d.validate(); err != nil {
-		return nil, err
-	}
-
-	return d, nil
-}
-
-func (d *resourceDHCPServerLease) getID() string {
+func (d *ResourceDHCPServerLease) getID() string {
 	return d.ID
 }
 
-func (d *resourceDHCPServerLease) setID(id string) {
+func (d *ResourceDHCPServerLease) setID(id string) {
 	d.ID = id
 }
 
-func (*resourceDHCPServerLease) getCreateCommand() string {
+func (*ResourceDHCPServerLease) getCreateCommand() string {
 	return "/ip/dhcp-server/lease/add"
 }
 
-func (*resourceDHCPServerLease) getReadCommand() string {
+func (*ResourceDHCPServerLease) getReadCommand() string {
 	return "/ip/dhcp-server/lease/print"
 }
 
-func (*resourceDHCPServerLease) getUpdateCommand() string {
+func (*ResourceDHCPServerLease) getUpdateCommand() string {
 	return "/ip/dhcp-server/lease/set"
 }
 
-func (*resourceDHCPServerLease) getDeleteCommand() string {
+func (*ResourceDHCPServerLease) getDeleteCommand() string {
 	return "/ip/dhcp-server/lease/remove"
 }

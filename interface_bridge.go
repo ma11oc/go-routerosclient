@@ -1,8 +1,6 @@
 package routerosclient
 
 import (
-	"fmt"
-
 	"github.com/asaskevich/govalidator"
 )
 
@@ -25,7 +23,7 @@ import (
  * transmit-hold-count --
  */
 
-type resourceInterfaceBridge struct {
+type ResourceInterfaceBridge struct {
 	ID           string `ros:".id"`
 	Comment      string `ros:"comment"       valid:"optional"`
 	Disabled     bool   `ros:"disabled"      valid:"optional"`
@@ -35,7 +33,7 @@ type resourceInterfaceBridge struct {
 	Name         string `ros:"name"          valid:"required"`
 }
 
-func (d *resourceInterfaceBridge) validate() error {
+func (d *ResourceInterfaceBridge) validate() error {
 	if d.ID == "" {
 		_, err := govalidator.ValidateStruct(d)
 
@@ -48,47 +46,48 @@ func (d *resourceInterfaceBridge) validate() error {
 	return nil
 }
 
-func NewInterfaceBridge(attrs map[string]string) (*resourceInterfaceBridge, error) {
-	// FIXME
-	var d *resourceInterfaceBridge
-	var ok bool
+/* FIXME
+ * func NewInterfaceBridge(attrs map[string]string) (*resourceInterfaceBridge, error) {
+ *     var d *resourceInterfaceBridge
+ *     var ok bool
+ *
+ *     i, err := setFieldsFromMap(&resourceInterfaceBridge{}, attrs)
+ *     if err != nil {
+ *         return nil, err
+ *     }
+ *
+ *     if d, ok = i.(*resourceInterfaceBridge); !ok {
+ *         return nil, fmt.Errorf("unable to cast interface to *resourceInterfaceBridge")
+ *     }
+ *
+ *     if err := d.validate(); err != nil {
+ *         return nil, err
+ *     }
+ *
+ *     return d, nil
+ * }
+ */
 
-	i, err := setFieldsFromMap(&resourceInterfaceBridge{}, attrs)
-	if err != nil {
-		return nil, err
-	}
-
-	if d, ok = i.(*resourceInterfaceBridge); !ok {
-		return nil, fmt.Errorf("unable to cast interface to *resourceInterfaceBridge")
-	}
-
-	if err := d.validate(); err != nil {
-		return nil, err
-	}
-
-	return d, nil
-}
-
-func (d *resourceInterfaceBridge) getID() string {
+func (d *ResourceInterfaceBridge) getID() string {
 	return d.ID
 }
 
-func (d *resourceInterfaceBridge) setID(id string) {
+func (d *ResourceInterfaceBridge) setID(id string) {
 	d.ID = id
 }
 
-func (*resourceInterfaceBridge) getCreateCommand() string {
+func (*ResourceInterfaceBridge) getCreateCommand() string {
 	return "/interface/bridge/add"
 }
 
-func (*resourceInterfaceBridge) getReadCommand() string {
+func (*ResourceInterfaceBridge) getReadCommand() string {
 	return "/interface/bridge/print"
 }
 
-func (*resourceInterfaceBridge) getUpdateCommand() string {
+func (*ResourceInterfaceBridge) getUpdateCommand() string {
 	return "/interface/bridge/set"
 }
 
-func (*resourceInterfaceBridge) getDeleteCommand() string {
+func (*ResourceInterfaceBridge) getDeleteCommand() string {
 	return "/interface/bridge/remove"
 }

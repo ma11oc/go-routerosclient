@@ -1,19 +1,17 @@
 package routerosclient
 
 import (
-	"fmt"
-
 	"github.com/asaskevich/govalidator"
 )
 
-type resourceDHCPServer struct {
+type ResourceDHCPServer struct {
 	ID        string `ros:".id"`
 	Disabled  bool   `ros:"disabled"     valid:"optional"`
 	Name      string `ros:"name"         valid:"optional"`
 	Interface string `ros:"interface"    valid:"required"`
 }
 
-func (d *resourceDHCPServer) validate() error {
+func (d *ResourceDHCPServer) validate() error {
 	if d.ID == "" {
 		_, err := govalidator.ValidateStruct(d)
 
@@ -26,46 +24,48 @@ func (d *resourceDHCPServer) validate() error {
 	return nil
 }
 
-func NewDHCPServer(attrs map[string]string) (*resourceDHCPServer, error) {
-	var d *resourceDHCPServer
-	var ok bool
+/* FIXME
+ * func NewDHCPServer(attrs map[string]string) (*ResourceDHCPServer, error) {
+ *     var d *ResourceDHCPServer
+ *     var ok bool
+ *
+ *     i, err := setFieldsFromMap(&resourceDHCPServer{}, attrs)
+ *     if err != nil {
+ *         return nil, err
+ *     }
+ *
+ *     if d, ok = i.(*ResourceDHCPServer); !ok {
+ *         return nil, fmt.Errorf("unable to cast interface to *ResourceDHCPServer")
+ *     }
+ *
+ *     if err := d.validate(); err != nil {
+ *         return nil, err
+ *     }
+ *
+ *     return d, nil
+ * }
+ */
 
-	i, err := setFieldsFromMap(&resourceDHCPServer{}, attrs)
-	if err != nil {
-		return nil, err
-	}
-
-	if d, ok = i.(*resourceDHCPServer); !ok {
-		return nil, fmt.Errorf("unable to cast interface to *resourceDHCPServer")
-	}
-
-	if err := d.validate(); err != nil {
-		return nil, err
-	}
-
-	return d, nil
-}
-
-func (d *resourceDHCPServer) getID() string {
+func (d *ResourceDHCPServer) getID() string {
 	return d.ID
 }
 
-func (d *resourceDHCPServer) setID(id string) {
+func (d *ResourceDHCPServer) setID(id string) {
 	d.ID = id
 }
 
-func (*resourceDHCPServer) getCreateCommand() string {
+func (*ResourceDHCPServer) getCreateCommand() string {
 	return "/ip/dhcp-server/add"
 }
 
-func (*resourceDHCPServer) getReadCommand() string {
+func (*ResourceDHCPServer) getReadCommand() string {
 	return "/ip/dhcp-server/print"
 }
 
-func (*resourceDHCPServer) getUpdateCommand() string {
+func (*ResourceDHCPServer) getUpdateCommand() string {
 	return "/ip/dhcp-server/set"
 }
 
-func (*resourceDHCPServer) getDeleteCommand() string {
+func (*ResourceDHCPServer) getDeleteCommand() string {
 	return "/ip/dhcp-server/remove"
 }

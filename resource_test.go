@@ -26,7 +26,7 @@ func (tr *testResource) setup(c *Client, stub bool) (error, bool) {
 
 func (tr *testResource) teardown(c *Client, stub bool) (error, bool) {
 	if !stub {
-		// since resource are dependent from each other,
+		// since resources are dependent from each other,
 		// delete them in reverse order
 		for i := len(tr.env) - 1; i >= 0; i-- {
 			if err, ok := c.DeleteResource(tr.env[i]); !ok {
@@ -41,11 +41,11 @@ func (tr *testResource) teardown(c *Client, stub bool) (error, bool) {
 var (
 	resources = []*testResource{
 		&testResource{
-			min: &resourceInterfaceBridge{
+			min: &ResourceInterfaceBridge{
 				Disabled: true,
 				Name:     "br0",
 			},
-			full: &resourceInterfaceBridge{
+			full: &ResourceInterfaceBridge{
 				Comment:      "default bridge",
 				Disabled:     false,
 				FastForward:  true,
@@ -56,28 +56,28 @@ var (
 		},
 		&testResource{
 			env: []Resource{
-				&resourceInterfaceBridge{
+				&ResourceInterfaceBridge{
 					Name:     "test-bridge",
 					Disabled: false,
 					MTU:      1500,
 				},
 			},
-			min: &resourceDHCPServer{
+			min: &ResourceDHCPServer{
 				Interface: "test-bridge",
 				Name:      "dhcp1",
 			},
-			full: &resourceDHCPServer{
+			full: &ResourceDHCPServer{
 				Interface: "test-bridge",
 				Disabled:  false,
 				Name:      "dhcp1",
 			},
 		},
 		&testResource{
-			min: &resourceDNSStaticRecord{
+			min: &ResourceDNSStaticRecord{
 				Address: "169.254.169.254",
 				Name:    "host.example.tld",
 			},
-			full: &resourceDNSStaticRecord{
+			full: &ResourceDNSStaticRecord{
 				Address:  "169.254.169.254",
 				Comment:  "test dns record",
 				Disabled: false,
@@ -87,23 +87,23 @@ var (
 		},
 		&testResource{
 			env: []Resource{
-				&resourceInterfaceBridge{
+				&ResourceInterfaceBridge{
 					Name:     "test-bridge",
 					Disabled: false,
 					MTU:      1500,
 				},
-				&resourceDHCPServer{
+				&ResourceDHCPServer{
 					Interface: "test-bridge",
 					Disabled:  false,
 					Name:      "test-dhcp-server",
 				},
 			},
-			min: &resourceDHCPServerLease{
+			min: &ResourceDHCPServerLease{
 				Address:    "169.254.169.254",
 				MacAddress: "00:11:22:33:44:55",
 				Server:     "test-dhcp-server",
 			},
-			full: &resourceDHCPServerLease{
+			full: &ResourceDHCPServerLease{
 				Address:      "169.254.169.254",
 				AddressLists: "none",
 				Comment:      "test dhcp server lease",

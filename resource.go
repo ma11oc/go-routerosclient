@@ -98,14 +98,23 @@ func (c *Client) UpdateResource(o Resource, n Resource) (error, bool) {
 func (c *Client) ReadResource(res Resource) (Resource, error) {
 	log.Printf("[D][R] ReadResource(%v)", res)
 
-	if err := res.validate(); err != nil {
+	var attrs map[string]string
+	var err error
+
+	if err = res.validate(); err != nil {
 		return nil, err
 	}
 
 	command := res.getReadCommand()
-	attrs, err := buildAttrsFromResource(res)
-	if err != nil {
-		return nil, err
+
+	// it's enough to have a non empty id field to perform query
+	if res.getID() != "" {
+		attrs = map[string]string{".id": res.getID()}
+	} else {
+		attrs, err = buildAttrsFromResource(res)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	cmd, err := buildCommand(command, nil, &attrs, true)

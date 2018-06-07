@@ -86,6 +86,40 @@ var (
 			},
 		},
 		&testResource{
+			min: &ResourceDHCPServerOption{
+				Code:  66,
+				Name:  "next-server",
+				Value: "'169.254.169.1'",
+			},
+			full: &ResourceDHCPServerOption{
+				Code:  67,
+				Name:  "bootfile",
+				Value: "'pxelinux.0'",
+			},
+		},
+		&testResource{
+			env: []Resource{
+				&ResourceDHCPServerOption{
+					Code:  66,
+					Name:  "next-server",
+					Value: "'169.254.169.1'",
+				},
+				&ResourceDHCPServerOption{
+					Code:  67,
+					Name:  "bootfile",
+					Value: "'pxelinux.0'",
+				},
+			},
+			min: &ResourceDHCPServerOptionSet{
+				Name:    "PXEClient",
+				Options: "next-server",
+			},
+			full: &ResourceDHCPServerOptionSet{
+				Name:    "PXEClient",
+				Options: "next-server,bootfile",
+			},
+		},
+		&testResource{
 			env: []Resource{
 				&ResourceInterfaceBridge{
 					Name:     "test-bridge",
@@ -96,6 +130,11 @@ var (
 					Interface: "test-bridge",
 					Disabled:  false,
 					Name:      "test-dhcp-server",
+				},
+				&ResourceDHCPServerOption{
+					Code:  66,
+					Name:  "next-server",
+					Value: "'169.254.169.1'",
 				},
 			},
 			min: &ResourceDHCPServerLease{
@@ -109,6 +148,7 @@ var (
 				Comment:      "test dhcp server lease",
 				ClientID:     "test-machine",
 				Disabled:     true,
+				DHCPOption:   "next-server",
 				MacAddress:   "00:11:22:33:44:55",
 				Server:       "test-dhcp-server",
 			},

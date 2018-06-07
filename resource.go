@@ -139,10 +139,14 @@ func (c *Client) ReadResource(res Resource) (Resource, error) {
 		switch res.(type) {
 		case *ResourceInterfaceBridge:
 			nr = &ResourceInterfaceBridge{}
-		case *ResourceDHCPServerLease:
-			nr = &ResourceDHCPServerLease{}
 		case *ResourceDHCPServer:
 			nr = &ResourceDHCPServer{}
+		case *ResourceDHCPServerOption:
+			nr = &ResourceDHCPServerOption{}
+		case *ResourceDHCPServerOptionSet:
+			nr = &ResourceDHCPServerOptionSet{}
+		case *ResourceDHCPServerLease:
+			nr = &ResourceDHCPServerLease{}
 		case *ResourceDNSStaticRecord:
 			nr = &ResourceDNSStaticRecord{}
 		default:

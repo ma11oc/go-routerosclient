@@ -9,21 +9,21 @@ import (
 // TODO: insert-queue-before
 // TODO: lease-time
 // TODO: rate-limit
-// TODO: DHCPOption    string `ros:"dhcp-option"       valid:"optional"`
-// TODO: DHCPOptionSet string `ros:"dhcp-option-set"   valid:"optional"`
 // BUG: Surprisingly, RouterOS expects `=blocked=bool` on writing and `?=block-access=bool` on reading for `block-access` attribute.
 // BUG: RouterOS does not recognize space separated value of `comment` attribute.
 // BUG: AlwaysBroadcast doesn't use for read query.
 // BUG: UseSrcMac doesn't use for read query.
 type ResourceDHCPServerLease struct {
-	ID           string `ros:".id"`
-	Address      string `ros:"address"           valid:"ipv4,required"`
-	AddressLists string `ros:"address-lists"     valid:"optional"`
-	ClientID     string `ros:"client-id"         valid:"optional"`
-	Comment      string `ros:"comment"           valid:"optional"`
-	Disabled     bool   `ros:"disabled"          valid:"optional"`
-	MacAddress   string `ros:"mac-address"       valid:"mac,required"`
-	Server       string `ros:"server"            valid:"required"`
+	ID            string `ros:".id"`
+	Address       string `ros:"address"           valid:"ipv4,required"`
+	AddressLists  string `ros:"address-lists"     valid:"optional"`
+	ClientID      string `ros:"client-id"         valid:"optional"`
+	Comment       string `ros:"comment"           valid:"optional"`
+	DHCPOption    string `ros:"dhcp-option"       valid:"optional"`
+	DHCPOptionSet string `ros:"dhcp-option-set"   valid:"optional"`
+	Disabled      bool   `ros:"disabled"          valid:"optional"`
+	MacAddress    string `ros:"mac-address"       valid:"mac,required"`
+	Server        string `ros:"server"            valid:"required"`
 }
 
 func (d *ResourceDHCPServerLease) validate() error {

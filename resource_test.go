@@ -55,6 +55,19 @@ var (
 			},
 		},
 		&testResource{
+			min: &ResourceDNSStaticRecord{
+				Address: "169.254.169.254",
+				Name:    "host.example.tld",
+			},
+			full: &ResourceDNSStaticRecord{
+				Address:  "169.254.169.254",
+				Comment:  "test dns record",
+				Disabled: false,
+				Name:     "host.example.tld",
+				TTL:      "1w",
+			},
+		},
+		&testResource{
 			env: []Resource{
 				&ResourceInterfaceBridge{
 					Name:     "test-bridge",
@@ -73,16 +86,20 @@ var (
 			},
 		},
 		&testResource{
-			min: &ResourceDNSStaticRecord{
-				Address: "169.254.169.254",
-				Name:    "host.example.tld",
+			min: &ResourceDHCPServerNetwork{
+				Address: "192.168.0.0/24",
 			},
-			full: &ResourceDNSStaticRecord{
-				Address:  "169.254.169.254",
-				Comment:  "test dns record",
-				Disabled: false,
-				Name:     "host.example.tld",
-				TTL:      "1w",
+			full: &ResourceDHCPServerNetwork{
+				Address:      "192.168.1.0/24",
+				BootFileName: "pxelinux.0",
+				Comment:      "test-resource",
+				Domain:       "example.com",
+				DNSServer:    "192.168.1.1",
+				Gateway:      "192.168.1.1",
+				Netmask:      "24",
+				NextServer:   "192.168.1.10",
+				NTPServer:    "192.168.1.1",
+				WINSServer:   "192.168.1.10",
 			},
 		},
 		&testResource{

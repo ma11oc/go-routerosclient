@@ -141,6 +141,8 @@ func (c *Client) ReadResource(res Resource) (Resource, error) {
 			nr = &ResourceInterfaceBridge{}
 		case *ResourceDHCPServer:
 			nr = &ResourceDHCPServer{}
+		case *ResourceDHCPServerNetwork:
+			nr = &ResourceDHCPServerNetwork{}
 		case *ResourceDHCPServerOption:
 			nr = &ResourceDHCPServerOption{}
 		case *ResourceDHCPServerOptionSet:

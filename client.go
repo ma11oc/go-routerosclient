@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net"
 	"strings"
+	"sync"
 
 	"github.com/asaskevich/govalidator"
 	"github.com/go-routeros/routeros"
@@ -28,6 +29,7 @@ type Conn interface {
 }
 
 type Client struct {
+	mu   sync.Mutex
 	conn Conn
 }
 
@@ -71,6 +73,9 @@ func NewTLSClient(c *Config) (*Client, error) {
 }
 
 func (c *Client) Run(query string) (*routeros.Reply, error) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
 	return c.conn.RunArgs(strings.Split(query, " "))
 }
 
